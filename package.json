@@ -1,7 +1,7 @@
 {
   "name": "carbon-footprint-awareness-platform",
   "version": "1.0.0",
-  "description": "An API to calculate and raise awareness about individual carbon footprints.",
+  "description": "Production grade API framework to evaluate, compute, and offset global greenhouse gas emissions metrics.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
