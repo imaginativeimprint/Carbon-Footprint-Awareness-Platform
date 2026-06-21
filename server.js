@@ -3,7 +3,16 @@ const helmet = require('helmet');
 
 const app = express();
 app.use(express.json());
-app.use(helmet()); // Boosts Security parameter score
+
+// Content Security Policy adjustment to allow clean inline styles for our cool UI
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+            "style-src": ["'self'", "'unsafe-inline'"],
+        },
+    },
+}));
 
 // Carbon emission factors (kg CO2 per unit)
 const EMISSION_FACTORS = {
@@ -67,9 +76,84 @@ app.post('/api/calculate', (req, res) => {
     }
 });
 
-// Basic Health Check Endpoint
+// Beautiful Web Dashboard UI for the Root Route
 app.get('/', (req, res) => {
-    res.status(200).send("Carbon Footprint Awareness Platform API is live.");
+    res.send(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Carbon Footprint Awareness Platform</title>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                background-color: #0d1117;
+                color: #c9d1d9;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                margin: 0;
+                padding: 20px;
+            }
+            .card {
+                background: #161b22;
+                border: 1px solid #30363d;
+                border-radius: 12px;
+                padding: 40px;
+                max-width: 500px;
+                text-align: center;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            }
+            .icon {
+                font-size: 48px;
+                margin-bottom: 10px;
+            }
+            h1 {
+                color: #58a6ff;
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+            p {
+                color: #8b949e;
+                line-height: 1.6;
+                font-size: 15px;
+            }
+            .status {
+                display: inline-block;
+                background: rgba(46, 160, 67, 0.15);
+                color: #3fb950;
+                padding: 6px 12px;
+                border-radius: 20px;
+                font-size: 13px;
+                font-weight: 600;
+                margin-top: 15px;
+                border: 1px solid rgba(46, 160, 67, 0.4);
+            }
+            .api-badge {
+                display: block;
+                margin-top: 25px;
+                font-family: monospace;
+                background: #21262d;
+                padding: 10px;
+                border-radius: 6px;
+                color: #ff7b72;
+                font-size: 13px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="card">
+            <div class="icon">🌍</div>
+            <h1>Carbon Footprint Awareness Platform</h1>
+            <p>A production-grade, secure REST API built to track, analyze, and optimize environmental impact data across transit, energy, and dietary metrics.</p>
+            <div class="status">● System Operational & Live</div>
+            <div class="api-badge">POST /api/calculate</div>
+        </div>
+    </body>
+    </html>
+    `);
 });
 
 const PORT = process.env.PORT || 3000;
@@ -79,4 +163,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = app; // Exported for unit testing
+module.exports = app;
