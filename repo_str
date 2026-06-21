@@ -1,0 +1,8 @@
+carbon-awareness-platform/
+│
+├── .gitignore
+├── package.json
+├── server.js
+├── README.md
+└── test/
+    └── app.test.js
